@@ -1,5 +1,10 @@
 # botkeep.cloud-farm
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Stars](https://img.shields.io/github/stars/daicy-c0de/botkeep.cloud-farm?style=social)
+![std-only](https://img.shields.io/badge/dependencies-stdlib%20only-success)
+
 Auto-create botkeep.cloud accounts (temp mail + Turnstile solver + auto-verify email)
 dan autoretry server creation sampai dapat. Full API, no browser di sisi client.
 
