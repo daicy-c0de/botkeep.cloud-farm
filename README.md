@@ -1,4 +1,4 @@
-# botkeep-manager
+# botkeep.cloud-farm
 
 Auto-create botkeep.cloud accounts (temp mail + Turnstile solver + auto-verify email)
 dan autoretry server creation sampai dapat. Full API, no browser di sisi client.
