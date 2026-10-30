@@ -8,6 +8,24 @@
 Auto-create botkeep.cloud accounts (temp mail + Turnstile solver + auto-verify email)
 dan autoretry server creation sampai dapat. Full API, no browser di sisi client.
 
+## Struktur
+```
+app.py              entry tipis: --cli → botkeep.cli, else → botkeep.bot
+botkeep/
+  __init__.py
+  config.py         env/.env loader, konstanta (MAX_THREADS, MAX_ATTEMPTS, SOLVE_BACKOFF,
+                    SPEK_LADDER, interval), load_state/save_state, STATE global
+  telegram.py       Telegram API: keep-alive TLS conn, tg/send/edit/ack
+  providers.py      email chain: generator.email → mail.tm → tempmail.plus + pool_proxies
+  solver.py         Turnstile solver client (SOLVER_URL)
+  api.py            Botkeep API client: login/register/verify, server ladder (build_payload,
+                    try_create_server, assign_server)
+  workers.py        acc_worker + retry loop, acc_supervisor, STOP_JOBS, watcher autoretry,
+                    views (v_status/v_servers/v_watch/v_proxy), keyboards
+  bot.py            handle_update (inline UI, callback, /start /stop) + main() TG loop
+  cli.py            cli_run: mode terminal tanpa Telegram
+```
+
 ## Fitur
 - 👤 Buat Akun: generator.email / mail.tm / tempmail.plus fallback chain + Turnstile solver + register + verify
 - 🔁 Autoretry: cek kapasitas per akun tiap 5 menit, ladder spek otomatis (512→128 MB), notif Telegram saat dapat server
