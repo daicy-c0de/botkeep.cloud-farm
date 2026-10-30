@@ -1,0 +1,7 @@
+.env
+state.json
+token.b64
+*.txt
+__pycache__/
+*.log
+proxies*
