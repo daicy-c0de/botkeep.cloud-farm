@@ -1,0 +1,1 @@
+# stdlib only - ga ada dependency eksternal
