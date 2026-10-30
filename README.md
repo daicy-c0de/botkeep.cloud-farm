@@ -1,7 +1,7 @@
 # botkeep-manager
 
 Auto-create botkeep.cloud accounts (temp mail + Turnstile solver + auto-verify email)
-dan autoretry server creation sampai dapat. Full API, no browser自动化 di sisi client.
+dan autoretry server creation sampai dapat. Full API, no browser di sisi client.
 
 ## Fitur
 - 👤 Buat Akun: generator.email / mail.tm / tempmail.plus fallback chain + Turnstile solver + register + verify
@@ -24,10 +24,34 @@ python3 app.py
 ```
 
 ## Kebutuhan eksternal (jangan pake punya orang lain!)
-- **Turnstile solver sendiri** — set `SOLVER_URL` + `SOLVER_KEY` env. Contoh solver open-source:
-  - turnstile-solver (chromium) / camoufox-based solver — deploy sendiri di VPS/server lu
-- **Proxy pool** — set `POOL_FILE` ke JSON `[{"addr": "host:port", "https": true}, ...]`
-  atau upload `.txt` via bot. Direct IP besar kemungkinan di-WAF (HTTP 429).
+
+### 1. Turnstile solver (wajib — pake salah satu, punya sendiri)
+
+Contoh layanan solver berbayar yang support Cloudflare Turnstile:
+- **CapSolver** (capsolver.com) — Turnstile support, harga per 1k solve
+- **2Captcha** (2captcha.com) — Turnstile support, harga per 1k solve
+- **AntiCaptcha** (anti-captcha.com) — Turnstile support
+- **NoCaptchaAi** (nocaptchaai.com) — Turnstile support
+
+Tiap layanan beda bentuk API request/response. Adapter tipis yang lu butuhin:
+endpoint `SOLVER_URL` harus nerima POST JSON:
+```json
+{"url": "...", "sitekey": "...", "action": "register"}
+```
+dan balikin:
+```json
+{"token": "..."}
+```
+
+Cara gampang: deploy adapter kecil (Flask/FastAPI ~30 baris) yang jadi jembatan
+format di atas ke API solver pilihan lu — simpan API key solver di adapter,
+bukan di repo ini.
+
+### 2. Proxy pool (sangat disarankan)
+- Set `POOL_FILE` ke JSON `[{"addr": "host:port", "https": true}, ...]`
+  atau upload `.txt` via bot.
+- Contoh provider proxy residential: Bright Data, Smartproxy, IPRoyal, WormGates.
+- Direct IP VPS besar kemungkinan di-WAF (HTTP 429).
 
 ## Environment variables
 | Var | Wajib | Default | Keterangan |
@@ -35,7 +59,7 @@ python3 app.py
 | BOT_TOKEN | utk TG mode | - | token bot lu |
 | AUTH_USERS | utk TG mode | - | Telegram user ID lu (koma utk multi) |
 | SOLVER_KEY | ya | - | key solver lu |
-| SOLVER_URL | tidak | http://localhost:8790/solve | endpoint solver |
+| SOLVER_URL | ya | - | endpoint solver lu (daftar di bawah) |
 | SOLVER_SITEKEY | tidak | (botkeep) | sitekey Turnstile |
 | TARGET_URL | tidak | https://botkeep.cloud/register | halaman target solve |
 | POOL_FILE | tidak | proxies.json | pool proxy JSON |
